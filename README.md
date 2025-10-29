@@ -43,10 +43,13 @@ GRANT ALL PRIVILEGES ON DATABASE user_management TO nest_user;
   "email": "john@example.com",
   "password": "secure123"
 }
-```
 
 #### 安装 class-validator 和 class-transformer
 npm install class-validator class-transformer
+
+#### 安装配置
+npm install @nestjs/config
+
 ## 部署云平台mau
 $ npm install -g @nestjs/mau
 $ mau deploy
