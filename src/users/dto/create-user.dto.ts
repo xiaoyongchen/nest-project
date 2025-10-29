@@ -1,9 +1,15 @@
-import { Exclude, Expose } from "class-transformer";
-import { IsEmail, IsString, MaxLength, MinLength, registerDecorator, ValidationOptions } from "class-validator";
+import { Exclude, Expose } from 'class-transformer';
+import {
+  IsEmail,
+  IsString,
+  MaxLength,
+  registerDecorator,
+  ValidationOptions,
+} from 'class-validator';
 
 // 自定义校验器
 export function IsStrongPassword(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       name: 'isStrongPassword',
       target: object.constructor,
@@ -15,8 +21,8 @@ export function IsStrongPassword(validationOptions?: ValidationOptions) {
         },
         defaultMessage() {
           return '密码必须包含大小写字母和数字，且长度至少8位';
-        }
-      }
+        },
+      },
     });
   };
 }
@@ -29,7 +35,8 @@ export class CreateUserDto {
   @MaxLength(36)
   readonly email: string;
   // plainToClass, classToPlain 在服务层，也可以手动调用
-  @Exclude() // 这个字段不会在响应中暴露
+  // @Exclude() IsStrongPassword 同时使用序列化的时候会异常。这里不适用expose, 可以考虑两个dto
+  // @Exclude()
   @IsStrongPassword()
   readonly password: string;
 }

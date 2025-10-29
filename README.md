@@ -16,6 +16,10 @@ npm install -g @nestjs/cli
 
 #### 创建项目
 nest new user-management-backend
+// 快速创建users模块
+nest generate module users
+nest generate service users
+nest generate controller users
 
 #### 进入项目目录
 cd user-management-backend

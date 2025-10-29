@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+// 在服务层使用自定义异常
+import { NotFoundException } from '../exceptions/not-fount.exception';
 
 @Injectable()
 export class UserService {
@@ -22,7 +24,11 @@ export class UserService {
   }
 
   async findOne(id: number): Promise<User | null> {
-    return this.userRepository.findOneBy({ id });
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException('User', id);
+    }
+    return user;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {
@@ -31,6 +37,9 @@ export class UserService {
   }
 
   async remove(id: number): Promise<void> {
-    await this.userRepository.delete(id);
+    const result = await this.userRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException('User', id);
+    }
   }
 }
