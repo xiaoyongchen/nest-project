@@ -6,7 +6,7 @@ import { UserController } from './user.controller';
 import { User } from './user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User])], // 注入 User 实体到当前模块
   providers: [UserService],
   controllers: [UserController],
 })

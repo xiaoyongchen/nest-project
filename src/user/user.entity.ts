@@ -1,9 +1,10 @@
-// 创建用户实体
+// 创建映射到数据库表的类（实体）
 // src/user/user.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class User {
+  // 自增主键，自动生成
   @PrimaryGeneratedColumn()
   id: number;
 
