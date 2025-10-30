@@ -10,6 +10,7 @@ import {
 import * as bcrypt from 'bcryptjs';
 
 @Entity()
+// @Unique(['tenantId', 'email']) // ✅ 表级唯一约束
 export class User {
   // 自增主键，自动生成
   @PrimaryGeneratedColumn()
@@ -30,7 +31,8 @@ export class User {
   role: string;
   @BeforeInsert()
   @BeforeUpdate()
-  async hashPassword?() {
+  async hashPassword() {
+    console.log('🔧 hashPassword method called');
     if (this.password) {
       this.password = await bcrypt.hash(this.password, 12);
     }

@@ -22,7 +22,7 @@ import { AuthController } from './auth.controller';
       }),
       inject: [ConfigService],
     }),
-    forwardRef(() => UserModule),
+    forwardRef(() => UserModule), // 添加 forwardRef，防止循环引用
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
