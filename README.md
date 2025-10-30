@@ -62,6 +62,8 @@ npm install @types/bcryptjs --save-dev
 
 #### Authorization Bearer asdkjfalskdj123 进行鉴权登录调用接口
 
+#### 安装swagger
+npm install @nestjs/swagger
 ## 部署云平台mau
 $ npm install -g @nestjs/mau
 $ mau deploy

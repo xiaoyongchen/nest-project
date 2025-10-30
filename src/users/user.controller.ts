@@ -17,18 +17,26 @@ import { User } from './user.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('用户')
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @ApiBearerAuth() // 声明需要认证token
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.userService.create(createUserDto);
   }
 
   @Get()
+  @ApiOperation({
+    summary: '获取用户列表',
+    description: '支持分页、排序和搜索',
+  })
+
   // 保护用户路由
   findAll(): Promise<User[]> {
     return this.userService.findAll();
