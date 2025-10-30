@@ -22,7 +22,7 @@ export class User {
   @Column({ unique: true }) // ✅ 字段级唯一约束
   email: string;
 
-  @Column()
+  @Column({ select: false }) // ✅ 密码字段不返回给前端
   password: string;
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
