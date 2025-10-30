@@ -13,16 +13,14 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    const logger = new Logger(AuthService.name);
     const user = await this.userService.findByEmail(email);
-    logger.log('校验', { email, password }, user, user?.password === password);
     if (user && (await bcrypt.compare(password, user.password))) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
-      logger.log('校验成功', { email, password }, user);
+      console.log('校验成功', { email, password }, user);
       return result;
     }
-    logger.log('校验失败', { email, password }, user);
+    console.log('校验失败', { email, password }, user);
     return null;
   }
 
@@ -32,7 +30,7 @@ export class AuthService {
       throw new UnauthorizedException('邮箱或密码错误');
     }
 
-    const payload = { email: user.email, sub: user.id, roles: user.roles };
+    const payload = { email: user.email, sub: user.id, roles: user.role };
     return {
       access_token: this.jwtService.sign(payload),
       user: {

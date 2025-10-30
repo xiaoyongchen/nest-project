@@ -53,7 +53,14 @@ export class UserService {
     }
   }
 
+  // 这个需要显示把password赋给user
   async findByEmail(email: string): Promise<User | null> {
-    return this.userRepository.findOne({ where: { email } });
+    // return this.userRepository.findOne({ where: { email } });
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.email = :email', { email })
+      .addSelect('user.password')
+      .getOne();
+    return user;
   }
 }

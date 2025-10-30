@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsString, MaxLength } from 'class-validator';
 import { IsStrongPassword } from '../../validator/isStrongPassword';
 export class CreateUserDto {
   @Expose()
@@ -11,7 +11,6 @@ export class CreateUserDto {
   readonly email: string;
   @Expose()
   @MaxLength(36)
-  @MinLength(1)
   @IsString()
   readonly role: string;
   // plainToClass, classToPlain 在服务层，也可以手动调用

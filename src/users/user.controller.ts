@@ -15,8 +15,11 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Roles } from 'src/auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('users')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -37,6 +40,7 @@ export class UserController {
   }
 
   @Put(':id')
+  @Roles('admin') // 只有管理员可以变更用户
   update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -45,11 +49,10 @@ export class UserController {
   }
 
   @Delete(':id')
+  @Roles('admin') // 只有管理员可以删除用户
   remove(@Param('id') id: string): Promise<void> {
     return this.userService.remove(+id);
   }
-  // 保护用户路由
-  @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req: any) {
     return req.user;

@@ -60,6 +60,8 @@ npm install @types/passport-jwt --save-dev
 npm install bcryptjs
 npm install @types/bcryptjs --save-dev
 
+#### Authorization Bearer asdkjfalskdj123 进行鉴权登录调用接口
+
 ## 部署云平台mau
 $ npm install -g @nestjs/mau
 $ mau deploy
