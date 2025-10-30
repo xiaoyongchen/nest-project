@@ -4,8 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './users/user.module';
-import { CatsController } from './cats/cats.controller';
-import { CatsService } from './cats/cats.service';
+import { AuthModule } from './auth/auth.module';
 
 // 配置连接池
 @Module({
@@ -26,8 +25,9 @@ import { CatsService } from './cats/cats.service';
       inject: [ConfigService],
     }),
     UserModule, // 注册用户模块
+    AuthModule,
   ],
-  controllers: [AppController, CatsController],
-  providers: [AppService, CatsService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

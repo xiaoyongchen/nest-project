@@ -54,6 +54,12 @@ npm install class-validator class-transformer
 #### 安装配置
 npm install @nestjs/config
 
+#### 创建jwt配置文件
+npm install @nestjs/jwt @nestjs/passport passport passport-jwt
+npm install @types/passport-jwt --save-dev
+npm install bcryptjs
+npm install @types/bcryptjs --save-dev
+
 ## 部署云平台mau
 $ npm install -g @nestjs/mau
 $ mau deploy

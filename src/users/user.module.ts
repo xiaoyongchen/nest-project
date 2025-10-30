@@ -9,5 +9,6 @@ import { User } from './user.entity';
   imports: [TypeOrmModule.forFeature([User])], // 注入 User 实体到当前模块
   providers: [UserService],
   controllers: [UserController],
+  exports: [UserService], // 导出 UserService，auth模块中可以注入该服务
 })
 export class UserModule {}
