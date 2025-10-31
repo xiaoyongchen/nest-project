@@ -1,0 +1,17 @@
+# docker-compose.override.yml（开发环境日志配置）
+version: '3.8'
+
+services:
+  app:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        
+  db:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
