@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -8,6 +8,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 // 在服务层使用自定义异常
 import { NotFoundException } from '../exceptions/not-fount.exception';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { SortDto } from 'src/common/dto/sort.dto';
+import { SearchUsersDto } from './dto/search-users.dto';
 
 @Injectable()
 export class UserService {
@@ -62,5 +65,57 @@ export class UserService {
       .addSelect('user.password')
       .getOne();
     return user;
+  }
+  // 分页
+  async getList(searchDto: SearchUsersDto) {
+    const { page, size, order, sortBy } = searchDto;
+
+    const [users, total] = await this.userRepository.findAndCount({
+      where: { isDeleted: false },
+      order: { [sortBy]: order },
+      skip: (page - 1) * size,
+      take: size,
+    });
+
+    return {
+      data: users,
+      pagination: {
+        page,
+        size,
+        total,
+        pages: Math.ceil(total / size),
+      },
+    };
+  }
+
+  async searchUsers(searchDto: SearchUsersDto) {
+    const { page, size, search, role, order, sortBy } = searchDto;
+
+    const where: any = { isDeleted: false };
+
+    if (search) {
+      where.name = Like(`%${search}%`);
+    }
+
+    if (role) {
+      where.role = role;
+    }
+
+    const [users, total] = await this.userRepository.findAndCount({
+      where,
+      order: { [sortBy]: order },
+      skip: (page - 1) * size,
+      take: size,
+    });
+
+    return {
+      data: users,
+      pagination: {
+        page,
+        size,
+        total,
+        pages: Math.ceil(total / size),
+      },
+    };
   }
 }

@@ -19,6 +19,9 @@ export class User {
   @Column()
   name: string;
 
+  @Column({ default: false })
+  isDeleted: boolean;
+
   @Column({ unique: true }) // ✅ 字段级唯一约束
   email: string;
 

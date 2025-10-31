@@ -18,6 +18,8 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { SearchUsersDto } from './dto/search-users.dto';
+import { Public } from 'src/auth/public.decorator';
 
 @ApiTags('用户')
 @Controller('users')
@@ -32,6 +34,7 @@ export class UserController {
   }
 
   @Get()
+  @Public()
   @ApiOperation({
     summary: '获取用户列表',
     description: '支持分页、排序和搜索',
@@ -64,5 +67,9 @@ export class UserController {
   @Get('profile')
   getProfile(@Request() req: any) {
     return req.user;
+  }
+  @Post('list')
+  async getList(@Body() searchUsersDto: SearchUsersDto) {
+    return this.userService.getList(searchUsersDto);
   }
 }
