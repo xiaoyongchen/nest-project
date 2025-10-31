@@ -6,6 +6,7 @@ import {
   Column,
   BeforeInsert,
   BeforeUpdate,
+  UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 
@@ -29,9 +30,18 @@ export class User {
   password: string;
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: string;
+  createdAt: Date;
+
+  // 新镇的字段需要UpdateDateColumn
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @UpdateDateColumn({ nullable: true })
+  deletedAt: Date;
+
   @Column({ default: 'test' })
   role: string;
+
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword() {

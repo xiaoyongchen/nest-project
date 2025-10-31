@@ -20,7 +20,14 @@ import { AuthModule } from './auth/auth.module';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: process.env.NODE_ENV !== 'production', // 开发环境使用，自动同步数据库结构
+        synchronize: configService.get('DB_SYNC', false), // 生产环境设为 false
+        logging: configService.get('NODE_ENV') === 'development',
+        // 连接池配置
+        extra: {
+          max: 20, // 最大连接数
+          idleTimeoutMillis: 30000,
+          connectionTimeoutMillis: 2000,
+        },
       }),
       inject: [ConfigService],
     }),

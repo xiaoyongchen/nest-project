@@ -64,6 +64,10 @@ npm install @types/bcryptjs --save-dev
 
 #### 安装swagger
 npm install @nestjs/swagger
+
+#### 测试数据库
+psql -U nest_user -d user_db -c "SELECT version();"
+
 ## 部署云平台mau
 $ npm install -g @nestjs/mau
 $ mau deploy

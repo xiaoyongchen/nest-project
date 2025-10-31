@@ -72,4 +72,8 @@ export class UserController {
   async getList(@Body() searchUsersDto: SearchUsersDto) {
     return this.userService.getList(searchUsersDto);
   }
+  @Get('fuzzySearch/:query')
+  async fuzzySearch(@Param('query') query: string) {
+    return this.userService.fuzzySearch(query);
+  }
 }

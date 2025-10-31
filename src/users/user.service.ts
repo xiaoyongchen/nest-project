@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -8,8 +8,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 // 在服务层使用自定义异常
 import { NotFoundException } from '../exceptions/not-fount.exception';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { SortDto } from 'src/common/dto/sort.dto';
 import { SearchUsersDto } from './dto/search-users.dto';
 
 @Injectable()
@@ -49,8 +47,12 @@ export class UserService {
     return this.userRepository.findOneBy({ id });
   }
 
+  // 软删除
   async remove(id: number): Promise<void> {
-    const result = await this.userRepository.delete(id);
+    const result = await this.userRepository.update(id, {
+      isDeleted: true,
+      deletedAt: new Date(),
+    });
     if (result.affected === 0) {
       throw new NotFoundException('User', id);
     }
@@ -88,34 +90,23 @@ export class UserService {
     };
   }
 
-  async searchUsers(searchDto: SearchUsersDto) {
-    const { page, size, search, role, order, sortBy } = searchDto;
-
-    const where: any = { isDeleted: false };
-
-    if (search) {
-      where.name = Like(`%${search}%`);
-    }
-
-    if (role) {
-      where.role = role;
-    }
-
-    const [users, total] = await this.userRepository.findAndCount({
-      where,
-      order: { [sortBy]: order },
-      skip: (page - 1) * size,
-      take: size,
-    });
-
-    return {
-      data: users,
-      pagination: {
-        page,
-        size,
-        total,
-        pages: Math.ceil(total / size),
-      },
-    };
+  // 使用 QueryBuilder 的复杂查询
+  async fuzzySearch(query: string): Promise<User[]> {
+    const searchPattern = `%${query.trim()}%`;
+    // 这样会导致bug，isDeleted: true 也出来了
+    // .orWhere('user.email ILIKE :pattern', { pattern: searchPattern })
+    // .andWhere('user.isDeleted = :isDeleted', { isDeleted: false })
+    // .andWhere('user.isDeleted = :isDeleted', { isDeleted: false })
+    return this.userRepository
+      .createQueryBuilder('user')
+      .where('user.name ILIKE :pattern', { pattern: searchPattern })
+      .where(
+        '(user.name ILIKE :pattern OR user.email ILIKE :pattern) AND user.isDeleted = :isDeleted',
+        { pattern: searchPattern, isDeleted: false },
+      )
+      .andWhere('user.isDeleted = :isDeleted', { isDeleted: false })
+      .orderBy('user.createdAt', 'DESC')
+      .take(100)
+      .getMany();
   }
 }
