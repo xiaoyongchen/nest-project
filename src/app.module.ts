@@ -28,7 +28,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
         // username: configService.get('DB_USERNAME'),
         // password: configService.get('DB_PASSWORD'),
         // database: configService.get('DB_DATABASE'),
-        // url: process.env.DATABASE_URL, // Railway 自动提供
+        url: process.env.DATABASE_URL, // Railway 自动提供
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: configService.get('DB_SYNC', false), // 生产环境设为 false
         logging: configService.get('NODE_ENV') === 'development',
