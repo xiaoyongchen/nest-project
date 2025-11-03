@@ -23,14 +23,19 @@ import { ThrottlerModule } from '@nestjs/throttler';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: configService.get('DB_PORT'),
+        // host: configService.get('DB_HOST'),
+        // port: configService.get('DB_PORT'),
+        url: process.env.DATABASE_URL, // Railway 自动提供
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: configService.get('DB_SYNC', false), // 生产环境设为 false
         logging: configService.get('NODE_ENV') === 'development',
+        ssl:
+          process.env.NODE_ENV === 'production'
+            ? { rejectUnauthorized: false }
+            : false,
         // 连接池配置
         extra: {
           max: 20, // 最大连接数
