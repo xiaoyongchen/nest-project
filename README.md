@@ -334,3 +334,7 @@ docker run -d --name your-app-name -p 3000:3000 --env-file .env your-username/yo
 ## 部署云平台mau
 $ npm install -g @nestjs/mau
 $ mau deploy
+
+
+### 部署railway
+command + K 部署postgresql
