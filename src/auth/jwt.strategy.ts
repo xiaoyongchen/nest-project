@@ -12,7 +12,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private configService: ConfigService,
     private userService: UserService,
   ) {
-    const jwtSecret = configService.get('JWT_SECRET');
+    const jwtSecret = process.env.JWT_SECRET;
     // 确保 secret 存在
     if (!jwtSecret) {
       throw new Error('JWT_SECRET 环境变量未设置');
