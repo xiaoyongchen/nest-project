@@ -29,14 +29,19 @@ npm install @nestjs/typeorm typeorm pg @nestjs/mapped-types
 
 
 #### 登录 PostgreSQL
+在mac 老电脑
+mkdir -p /usr/local/var/postgresql@14
+initdb -D /usr/local/var/postgresql@14 -E utf8
+chmod 700 /usr/local/var/postgresql@14
+
 psql postgres
 
 #### 创建数据库
 CREATE DATABASE user_management;
 
 #### 创建用户并授权
-CREATE USER nest_user WITH PASSWORD 'securepassword';
-GRANT ALL PRIVILEGES ON DATABASE user_management TO nest_user;
+CREATE USER postgres WITH PASSWORD '123456';
+GRANT ALL PRIVILEGES ON DATABASE user_management TO postgres;
 
 #### 退出
 \q

@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { UserModule } from './users/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -21,14 +22,25 @@ import { ThrottlerModule } from '@nestjs/throttler';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: (
+        configService: ConfigService,
+      ):
+        | Promise<TypeOrmModuleOptions>
+        | TypeOrmModuleOptions
+        | Record<string, any> => ({
         type: 'postgres',
-        // host: configService.get('DB_HOST'),
-        // port: configService.get('DB_PORT'),
-        // username: configService.get('DB_USERNAME'),
-        // password: configService.get('DB_PASSWORD'),
-        // database: configService.get('DB_DATABASE'),
         url: process.env.DATABASE_URL, // Railway 自动提供
+        ...(configService.get('NODE_ENV') === 'development'
+          ? {
+              host: configService.get('DB_HOST'),
+              port: configService.get('DB_PORT'),
+              username: configService.get('DB_USERNAME'),
+              password: configService.get('DB_PASSWORD'),
+              database: configService.get('DB_DATABASE'),
+            }
+          : {
+              url: process.env.DATABASE_URL, // Railway 自动提供
+            }),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: configService.get('DB_SYNC', false), // 生产环境设为 false
         logging: configService.get('NODE_ENV') === 'development',
