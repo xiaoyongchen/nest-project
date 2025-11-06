@@ -41,7 +41,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
               url: process.env.DATABASE_URL, // Railway 自动提供
             }),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: configService.get('DB_SYNC', false), // 生产环境设为 false
+        synchronize: process.env.DB_SYNC || false,
         logging: process.env.NODE_ENV === 'development',
         ssl:
           process.env.NODE_ENV === 'production'
