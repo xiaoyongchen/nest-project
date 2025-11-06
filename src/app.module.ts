@@ -29,8 +29,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
         | TypeOrmModuleOptions
         | Record<string, any> => ({
         type: 'postgres',
-        url: process.env.DATABASE_URL, // Railway 自动提供
-        ...(configService.get('NODE_ENV') === 'development'
+        ...(process.env.NODE_ENV === 'development'
           ? {
               host: configService.get('DB_HOST'),
               port: configService.get('DB_PORT'),
@@ -43,7 +42,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
             }),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: configService.get('DB_SYNC', false), // 生产环境设为 false
-        logging: configService.get('NODE_ENV') === 'development',
+        logging: process.env.NODE_ENV === 'development',
         ssl:
           process.env.NODE_ENV === 'production'
             ? { rejectUnauthorized: false }
