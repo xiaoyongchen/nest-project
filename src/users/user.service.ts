@@ -31,7 +31,10 @@ export class UserService {
   }
 
   async findAll(): Promise<User[]> {
-    return this.userRepository.find();
+    const [users] = await this.userRepository.findAndCount({
+      where: { isDeleted: false },
+    });
+    return users;
   }
 
   async findOne(id: number): Promise<User | null> {
